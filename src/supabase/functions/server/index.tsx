@@ -1,7 +1,7 @@
-import { Hono } from 'npm:hono'
-import { cors } from 'npm:hono/cors'
-import { logger } from 'npm:hono/logger'
-import { createClient } from 'npm:@supabase/supabase-js@2'
+import { Hono } from 'hono'
+import { cors } from 'hono/cors'
+import { logger } from 'hono/logger'
+import { createClient } from '@supabase/supabase-js'
 import * as kv from './kv_store.tsx'
 
 const app = new Hono()
@@ -16,23 +16,20 @@ app.use('*', logger(console.log))
 
 // Initialize Supabase client
 const supabase = createClient(
-  Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
 // Helper function to verify user authentication
 async function verifyUser(authHeader: string | null) {
-  if (!authHeader?.startsWith('Bearer ')) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return { user: null, error: 'Missing or invalid authorization header' }
   }
-  
   const token = authHeader.split(' ')[1]
   const { data: { user }, error } = await supabase.auth.getUser(token)
-  
   if (error || !user) {
     return { user: null, error: 'Invalid or expired token' }
   }
-  
   return { user, error: null }
 }
 
@@ -128,22 +125,19 @@ app.post('/make-server-40eaaba9/auth/signin', async (c) => {
 
 // User profile routes
 app.get('/make-server-40eaaba9/user/profile', async (c) => {
-  const { user, error } = await verifyUser(c.req.header('Authorization'))
-  if (error) return c.json({ error }, 401)
-  
+  const { user, error } = await verifyUser(c.req.header('Authorization') ?? null)
+  if (error || !user) return c.json({ error: error || 'User not found' }, 401)
   const profile = await kv.get(`user:${user.id}`)
   return c.json({ profile })
 })
 
 app.put('/make-server-40eaaba9/user/profile', async (c) => {
-  const { user, error } = await verifyUser(c.req.header('Authorization'))
-  if (error) return c.json({ error }, 401)
-  
+  const { user, error } = await verifyUser(c.req.header('Authorization') ?? null)
+  if (error || !user) return c.json({ error: error || 'User not found' }, 401)
   try {
     const updates = await c.req.json()
     const currentProfile = await kv.get(`user:${user.id}`) || {}
     const updatedProfile = { ...currentProfile, ...updates }
-    
     await kv.set(`user:${user.id}`, updatedProfile)
     return c.json({ success: true, profile: updatedProfile })
   } catch (error) {
@@ -164,19 +158,16 @@ app.get('/make-server-40eaaba9/fairs', async (c) => {
 })
 
 app.post('/make-server-40eaaba9/fairs', async (c) => {
-  const { user, error } = await verifyUser(c.req.header('Authorization'))
-  if (error) return c.json({ error }, 401)
-  
+  const { user, error } = await verifyUser(c.req.header('Authorization') ?? null)
+  if (error || !user) return c.json({ error: error || 'User not found' }, 401)
   // Check if user is admin
   const userProfile = await kv.get(`user:${user.id}`)
   if (userProfile?.role !== 'admin') {
     return c.json({ error: 'Admin access required' }, 403)
   }
-  
   try {
     const fairData = await c.req.json()
     const fairId = `fair_${Date.now()}`
-    
     const newFair = {
       id: fairId,
       ...fairData,
@@ -186,7 +177,6 @@ app.post('/make-server-40eaaba9/fairs', async (c) => {
       visitors: [],
       revenue: 0
     }
-    
     await kv.set(`fair:${fairId}`, newFair)
     return c.json({ success: true, fair: newFair })
   } catch (error) {
@@ -197,7 +187,7 @@ app.post('/make-server-40eaaba9/fairs', async (c) => {
 
 // Exhibitor Management routes
 app.get('/make-server-40eaaba9/exhibitors', async (c) => {
-  const { user, error } = await verifyUser(c.req.header('Authorization'))
+  const { user, error } = await verifyUser(c.req.header('Authorization') ?? null)
   if (error) return c.json({ error }, 401)
   
   try {
@@ -210,7 +200,7 @@ app.get('/make-server-40eaaba9/exhibitors', async (c) => {
 })
 
 app.get('/make-server-40eaaba9/exhibitor/:id', async (c) => {
-  const { user, error } = await verifyUser(c.req.header('Authorization'))
+  const { user, error } = await verifyUser(c.req.header('Authorization') ?? null)
   if (error) return c.json({ error }, 401)
   
   const exhibitorId = c.req.param('id')
@@ -220,22 +210,18 @@ app.get('/make-server-40eaaba9/exhibitor/:id', async (c) => {
 })
 
 app.put('/make-server-40eaaba9/exhibitor/:id/approve', async (c) => {
-  const { user, error } = await verifyUser(c.req.header('Authorization'))
-  if (error) return c.json({ error }, 401)
-  
+  const { user, error } = await verifyUser(c.req.header('Authorization') ?? null)
+  if (error || !user) return c.json({ error: error || 'User not found' }, 401)
   // Check if user is admin
   const userProfile = await kv.get(`user:${user.id}`)
   if (userProfile?.role !== 'admin') {
     return c.json({ error: 'Admin access required' }, 403)
   }
-  
   const exhibitorId = c.req.param('id')
   const exhibitor = await kv.get(`exhibitor:${exhibitorId}`)
-  
   if (exhibitor) {
     exhibitor.status = 'approved'
     await kv.set(`exhibitor:${exhibitorId}`, exhibitor)
-    
     // Update user profile
     const userProfile = await kv.get(`user:${exhibitorId}`)
     if (userProfile) {
@@ -243,44 +229,36 @@ app.put('/make-server-40eaaba9/exhibitor/:id/approve', async (c) => {
       await kv.set(`user:${exhibitorId}`, userProfile)
     }
   }
-  
   return c.json({ success: true, exhibitor })
 })
 
 // Product Management routes
 app.get('/make-server-40eaaba9/exhibitor/:id/products', async (c) => {
-  const { user, error } = await verifyUser(c.req.header('Authorization'))
-  if (error) return c.json({ error }, 401)
-  
+  const { user, error } = await verifyUser(c.req.header('Authorization') ?? null)
+  if (error || !user) return c.json({ error: error || 'User not found' }, 401)
   const exhibitorId = c.req.param('id')
   const products = await kv.getByPrefix(`product:${exhibitorId}:`) || []
-  
   return c.json({ products })
 })
 
 app.post('/make-server-40eaaba9/exhibitor/:id/products', async (c) => {
-  const { user, error } = await verifyUser(c.req.header('Authorization'))
-  if (error) return c.json({ error }, 401)
-  
+  const { user, error } = await verifyUser(c.req.header('Authorization') ?? null)
+  if (error || !user) return c.json({ error: error || 'User not found' }, 401)
   const exhibitorId = c.req.param('id')
-  
   // Check if user owns this exhibitor profile or is admin
   const userProfile = await kv.get(`user:${user.id}`)
   if (user.id !== exhibitorId && userProfile?.role !== 'admin') {
     return c.json({ error: 'Access denied' }, 403)
   }
-  
   try {
     const productData = await c.req.json()
     const productId = `product_${Date.now()}`
-    
     const newProduct = {
       id: productId,
       exhibitorId,
       ...productData,
       createdAt: new Date().toISOString()
     }
-    
     await kv.set(`product:${exhibitorId}:${productId}`, newProduct)
     return c.json({ success: true, product: newProduct })
   } catch (error) {
@@ -291,7 +269,7 @@ app.post('/make-server-40eaaba9/exhibitor/:id/products', async (c) => {
 
 // Visitor Management routes
 app.get('/make-server-40eaaba9/visitors', async (c) => {
-  const { user, error } = await verifyUser(c.req.header('Authorization'))
+  const { user, error } = await verifyUser(c.req.header('Authorization') ?? null)
   if (error) return c.json({ error }, 401)
   
   try {
@@ -305,28 +283,23 @@ app.get('/make-server-40eaaba9/visitors', async (c) => {
 
 // Feedback routes
 app.post('/make-server-40eaaba9/feedback', async (c) => {
-  const { user, error } = await verifyUser(c.req.header('Authorization'))
-  if (error) return c.json({ error }, 401)
-  
+  const { user, error } = await verifyUser(c.req.header('Authorization') ?? null)
+  if (error || !user) return c.json({ error: error || 'User not found' }, 401)
   try {
     const feedbackData = await c.req.json()
     const feedbackId = `feedback_${Date.now()}`
-    
     const newFeedback = {
       id: feedbackId,
       userId: user.id,
       ...feedbackData,
       createdAt: new Date().toISOString()
     }
-    
     await kv.set(`feedback:${feedbackId}`, newFeedback)
-    
     // Add to visitor's feedback list
     const visitor = await kv.get(`visitor:${user.id}`) || { feedback: [] }
     visitor.feedback = visitor.feedback || []
     visitor.feedback.push(feedbackId)
     await kv.set(`visitor:${user.id}`, visitor)
-    
     return c.json({ success: true, feedback: newFeedback })
   } catch (error) {
     console.log('Create feedback error:', error)
@@ -336,25 +309,21 @@ app.post('/make-server-40eaaba9/feedback', async (c) => {
 
 // Analytics routes
 app.get('/make-server-40eaaba9/analytics/overview', async (c) => {
-  const { user, error } = await verifyUser(c.req.header('Authorization'))
-  if (error) return c.json({ error }, 401)
-  
+  const { user, error } = await verifyUser(c.req.header('Authorization') ?? null)
+  if (error || !user) return c.json({ error: error || 'User not found' }, 401)
   // Check if user is admin
   const userProfile = await kv.get(`user:${user.id}`)
   if (userProfile?.role !== 'admin') {
     return c.json({ error: 'Admin access required' }, 403)
   }
-  
   try {
     const fairs = await kv.getByPrefix('fair:') || []
     const exhibitors = await kv.getByPrefix('exhibitor:') || []
     const visitors = await kv.getByPrefix('visitor:') || []
     const feedback = await kv.getByPrefix('feedback:') || []
-    
     const activeFairs = fairs.filter(fair => fair.status === 'active').length
     const pendingExhibitors = exhibitors.filter(ex => ex.status === 'pending').length
     const totalRevenue = fairs.reduce((sum, fair) => sum + (fair.revenue || 0), 0)
-    
     const analytics = {
       activeFairs,
       totalExhibitors: exhibitors.length,
@@ -366,7 +335,6 @@ app.get('/make-server-40eaaba9/analytics/overview', async (c) => {
         ? feedback.reduce((sum, f) => sum + (f.rating || 0), 0) / feedback.length 
         : 0
     }
-    
     return c.json({ analytics })
   } catch (error) {
     console.log('Analytics error:', error)
@@ -514,4 +482,9 @@ app.get('/make-server-40eaaba9/health', (c) => {
   return c.json({ status: 'healthy', timestamp: new Date().toISOString() })
 })
 
-Deno.serve(app.fetch)
+// Replace with Node.js/Express or other server start logic if not using Deno
+// Example for Express:
+// const express = require('express');
+// const server = express();
+// server.use(app.fetch);
+// server.listen(process.env.PORT || 3000);

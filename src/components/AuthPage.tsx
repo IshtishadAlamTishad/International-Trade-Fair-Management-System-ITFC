@@ -15,7 +15,7 @@ import {
   AlertCircle
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
-import { toast } from 'sonner@2.0.3'
+import { toast } from 'sonner'
 
 interface AuthPageProps {
   onAuthSuccess: () => void
@@ -220,7 +220,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Tabs value={authTab} onValueChange={(v) => setAuthTab(v as 'login' | 'signup')}>
+                <Tabs value={authTab} onValueChange={(v: string) => setAuthTab(v as 'login' | 'signup')}>
                   <TabsList className="grid w-full grid-cols-2 mb-6">
                     <TabsTrigger value="login">Sign In</TabsTrigger>
                     <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -364,7 +364,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="role">Account Type</Label>
-                      <Select onValueChange={(value) => handleInputChange('role', value)}>
+                      <Select onValueChange={(value: string) => handleInputChange('role', value)}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select your role" />
                         </SelectTrigger>
