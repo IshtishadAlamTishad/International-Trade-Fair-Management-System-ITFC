@@ -26,11 +26,11 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { projectId } from '../utils/supabase/info'
-import { toast } from 'sonner@2.0.3'
+import { toast } from 'sonner'
 
 interface VisitorData {
   userId: string
-  tickets: Ticket[]
+  tickets: TicketData[]
   feedback: string[]
   interests: string[]
 }
@@ -103,10 +103,10 @@ export const VisitorDashboard: React.FC = () => {
       setLoading(true)
       
       // Load visitor profile - for demo purposes, create default data if none exists
-      const defaultVisitorData = {
-        userId: user?.id,
+      const defaultVisitorData: VisitorData = {
+        userId: user?.id ?? '',
         tickets: [
-          { id: 'VIS-2024-7891', type: 'Premium', fairId: 'fair_1', status: 'active' }
+          { id: 'VIS-2024-7891', type: 'Premium', fairId: 'fair_1', status: 'active' as 'active' }
         ],
         feedback: [],
         interests: ['Technology', 'Innovation', 'Sustainable Development', 'Digital Marketing']
@@ -473,16 +473,22 @@ export const VisitorDashboard: React.FC = () => {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>Select Trade Fair</Label>
-                  <Select onValueChange={(value) => setFeedbackForm(prev => ({ ...prev, fairId: value }))}>
+                    <Select
+                    onValueChange={(value: string) =>
+                      setFeedbackForm((prev: typeof feedbackForm) => ({ ...prev, fairId: value }))
+                    }
+                    >
                     <SelectTrigger>
                       <SelectValue placeholder="Choose an event to review" />
                     </SelectTrigger>
                     <SelectContent>
-                      {fairs.map((fair) => (
-                        <SelectItem key={fair.id} value={fair.id}>{fair.name}</SelectItem>
+                      {fairs.map((fair: Fair) => (
+                      <SelectItem key={fair.id} value={fair.id}>
+                        {fair.name}
+                      </SelectItem>
                       ))}
                     </SelectContent>
-                  </Select>
+                    </Select>
                 </div>
                 <div className="space-y-2">
                   <Label>Overall Rating</Label>
