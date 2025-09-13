@@ -1,30 +1,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { createClient } from '@supabase/supabase-js'
-import { projectId, publicAnonKey } from '../utils/supabase/info'
 
 interface User {
-  id: string
-  email: string
-  firstName: string
-  lastName: string
+  id?: string
+  username: string
   role: 'admin' | 'exhibitor' | 'visitor'
+  firstName?: string
+  lastName?: string
   company?: string
-  registrationStatus: 'pending' | 'approved' | 'rejected'
+  email?: string
 }
 
 interface AuthContextType {
   user: User | null
-  session: any
   loading: boolean
-  signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
-  signUp: (data: {
-    email: string
-    password: string
-    firstName: string
-    lastName: string
-    role: string
-    company?: string
-  }) => Promise<{ success: boolean; error?: string }>
+  signIn: (username: string, password: string) => Promise<{ success: boolean; error?: string }>
+  signUp: (data: { username: string; password: string; role: string }) => Promise<{ success: boolean; error?: string }>
   signOut: () => Promise<void>
 }
 
@@ -38,148 +28,86 @@ export const useAuth = () => {
   return context
 }
 
-const supabase = createClient(
-  `https://${projectId}.supabase.co`,
-  publicAnonKey
-)
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check for existing session
-    const getSession = async () => {
+    // Check session on mount
+    const checkSession = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession()
-        if (session && !error) {
-          setSession(session)
-          // Fetch user profile from backend
-          await fetchUserProfile(session.access_token)
+        const res = await fetch('/backend/check-session')
+        if (res.ok) {
+          const data = await res.json()
+          if (data.user) {
+            setUser(data.user)
+          } else {
+            setUser(null)
+          }
+        } else {
+          setUser(null)
         }
-      } catch (error) {
-        console.error('Session check error:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    getSession()
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setSession(session)
-      if (session) {
-        await fetchUserProfile(session.access_token)
-      } else {
+      } catch {
         setUser(null)
       }
       setLoading(false)
-    })
-
-    return () => subscription.unsubscribe()
+    }
+    checkSession()
   }, [])
 
-  const fetchUserProfile = async (accessToken: string) => {
+  const signIn = async (username: string, password: string) => {
     try {
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-40eaaba9/user/profile`, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        }
+      const response = await fetch('/backend/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
       })
-      
-      if (response.ok) {
-        const data = await response.json()
-        setUser(data.profile)
+      const data = await response.json()
+      if (data.success) {
+        setUser({
+          username,
+          role: data.role,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          company: data.company,
+          email: data.email
+        })
+        return { success: true }
+      } else {
+        return { success: false, error: data.error || 'Login failed' }
       }
-    } catch (error) {
-      console.error('Failed to fetch user profile:', error)
+    } catch (error: any) {
+      return { success: false, error: error.message || 'Login failed' }
     }
   }
 
-  const signIn = async (email: string, password: string) => {
+  const signUp = async (data: { username: string; password: string; role: string; firstName?: string; lastName?: string; company?: string; email?: string }) => {
     try {
-      setLoading(true)
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-40eaaba9/auth/signin`, {
+      const response = await fetch('/backend/signup', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${publicAnonKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
       })
-
-      const data = await response.json()
-      
-      if (data.success) {
-        setSession(data.session)
-        setUser(data.profile)
+      const res = await response.json()
+      if (res.success) {
         return { success: true }
       } else {
-        return { success: false, error: data.error }
+        return { success: false, error: res.error || 'Signup failed' }
       }
-    } catch (error) {
-      console.error('Sign in error:', error)
-      return { success: false, error: 'Network error during sign in' }
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const signUp = async (userData: {
-    email: string
-    password: string
-    firstName: string
-    lastName: string
-    role: string
-    company?: string
-  }) => {
-    try {
-      setLoading(true)
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-40eaaba9/auth/signup`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${publicAnonKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-      })
-
-      const data = await response.json()
-      
-      if (data.success) {
-        return { success: true }
-      } else {
-        return { success: false, error: data.error }
-      }
-    } catch (error) {
-      console.error('Sign up error:', error)
-      return { success: false, error: 'Network error during sign up' }
-    } finally {
-      setLoading(false)
+    } catch (error: any) {
+      return { success: false, error: error.message || 'Signup failed' }
     }
   }
 
   const signOut = async () => {
-    try {
-      await supabase.auth.signOut()
-      setUser(null)
-      setSession(null)
-    } catch (error) {
-      console.error('Sign out error:', error)
-    }
+    await fetch('/backend/logout')
+    setUser(null)
   }
 
-  const value = {
-    user,
-    session,
-    loading,
-    signIn,
-    signUp,
-    signOut
-  }
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
+// (Removed unreachable/duplicate code)

@@ -13,7 +13,7 @@ interface SignupFormProps {
 
 export function SignupForm({ onSignup }: SignupFormProps) {
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: '',
     name: '',
     role: '',
@@ -29,9 +29,12 @@ export function SignupForm({ onSignup }: SignupFormProps) {
     e.preventDefault()
     setLoading(true)
     setError('')
-
     try {
-      await onSignup(formData)
+      await onSignup({
+        username: formData.username,
+        password: formData.password,
+        role: formData.role
+      })
     } catch (err: any) {
       setError(err.message || 'Signup failed')
     } finally {
@@ -75,15 +78,15 @@ export function SignupForm({ onSignup }: SignupFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="username">Username</Label>
           <Input
-            id="email"
-            name="email"
-            type="email"
+            id="username"
+            name="username"
+            type="text"
             required
-            value={formData.email}
+            value={formData.username}
             onChange={handleChange}
-            placeholder="Enter your email"
+            placeholder="Enter your username or email"
           />
         </div>
       </div>

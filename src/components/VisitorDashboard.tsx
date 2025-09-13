@@ -64,7 +64,7 @@ interface Feedback {
 }
 
 export const VisitorDashboard: React.FC = () => {
-  const { user, signOut, session } = useAuth()
+  const { user, signOut } = useAuth()
   const [visitorData, setVisitorData] = useState<VisitorData | null>(null)
   const [fairs, setFairs] = useState<Fair[]>([])
   const [feedback, setFeedback] = useState<Feedback[]>([])
@@ -76,15 +76,14 @@ export const VisitorDashboard: React.FC = () => {
   })
 
   useEffect(() => {
-    if (session?.access_token && user?.id) {
+    if (user?.id) {
       loadVisitorData()
     }
-  }, [session, user])
+  }, [user])
 
   const apiCall = async (endpoint: string, options: RequestInit = {}) => {
     const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-40eaaba9${endpoint}`, {
       headers: {
-        'Authorization': `Bearer ${session?.access_token}`,
         'Content-Type': 'application/json',
         ...options.headers
       },
@@ -113,9 +112,9 @@ export const VisitorDashboard: React.FC = () => {
       }
       setVisitorData(defaultVisitorData)
       
-      // Load available fairs
-      const fairsResponse = await apiCall('/fairs')
-      setFairs(fairsResponse.fairs || [])
+  // Load available fairs from PHP backend
+  const fairsResponse = await apiCall('/items')
+  setFairs(Array.isArray(fairsResponse) ? fairsResponse : fairsResponse.fairs || [])
       
     } catch (error) {
       console.error('Failed to load visitor data:', error)
@@ -132,18 +131,18 @@ export const VisitorDashboard: React.FC = () => {
     }
 
     try {
-      await apiCall('/feedback', {
-        method: 'POST',
-        body: JSON.stringify({
-          fairId: feedbackForm.fairId,
-          rating: feedbackForm.rating,
-          comments: feedbackForm.comments
-        })
-      })
-      
-      toast.success('Feedback submitted successfully!')
-      setFeedbackForm({ fairId: '', rating: 0, comments: '' })
-      loadVisitorData() // Refresh data
+      // Example: If you have a feedback endpoint in PHP backend
+      // await apiCall('/feedback', {
+      //   method: 'POST',
+      //   body: JSON.stringify({
+      //     fairId: feedbackForm.fairId,
+      //     rating: feedbackForm.rating,
+      //     comments: feedbackForm.comments
+      //   })
+      // })
+      // toast.success('Feedback submitted successfully!')
+      // setFeedbackForm({ fairId: '', rating: 0, comments: '' })
+      // loadVisitorData() // Refresh data
     } catch (error) {
       console.error('Failed to submit feedback:', error)
       toast.error('Failed to submit feedback')

@@ -23,7 +23,7 @@ import {
   CreditCard
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
-import { projectId } from '../utils/supabase/info'
+// import { projectId } from '../utils/supabase/info'
 import { toast } from 'sonner'
 
 interface ExhibitorData {
@@ -53,31 +53,29 @@ interface Payment {
 }
 
 export const ExhibitorDashboard: React.FC = () => {
-  const { user, signOut, session } = useAuth()
+  const { user, signOut } = useAuth()
   const [exhibitorData, setExhibitorData] = useState<ExhibitorData | null>(null)
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (session?.access_token && user?.id) {
+    if (user) {
       loadExhibitorData()
     }
-  }, [session, user])
+  }, [user])
 
+  // Generic API call to PHP backend
   const apiCall = async (endpoint: string, options: RequestInit = {}) => {
-    const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-40eaaba9${endpoint}`, {
+    const response = await fetch(`/backend${endpoint}`, {
       headers: {
-        'Authorization': `Bearer ${session?.access_token}`,
         'Content-Type': 'application/json',
         ...options.headers
       },
       ...options
     })
-    
     if (!response.ok) {
       throw new Error(`API call failed: ${response.statusText}`)
     }
-    
     return response.json()
   }
 
@@ -85,13 +83,11 @@ export const ExhibitorDashboard: React.FC = () => {
     try {
       setLoading(true)
       
-      // Load exhibitor profile
-      const exhibitorResponse = await apiCall(`/exhibitor/${user?.id}`)
-      setExhibitorData(exhibitorResponse.exhibitor)
-      
-      // Load products
-      const productsResponse = await apiCall(`/exhibitor/${user?.id}/products`)
-      setProducts(productsResponse.products)
+  // Example: Replace with your PHP backend endpoints
+  // const exhibitorResponse = await apiCall(`/exhibitor/${user?.id}`)
+  // setExhibitorData(exhibitorResponse.exhibitor)
+  // const productsResponse = await apiCall(`/exhibitor/${user?.id}/products`)
+  // setProducts(productsResponse.products)
       
     } catch (error) {
       console.error('Failed to load exhibitor data:', error)

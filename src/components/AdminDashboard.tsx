@@ -67,22 +67,22 @@ interface Exhibitor {
 }
 
 export const AdminDashboard: React.FC = () => {
-  const { user, signOut, session } = useAuth()
+  const { user, signOut } = useAuth()
   const [analytics, setAnalytics] = useState<Analytics | null>(null)
   const [fairs, setFairs] = useState<Fair[]>([])
   const [exhibitors, setExhibitors] = useState<Exhibitor[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (session?.access_token) {
+    if (user) {
       loadDashboardData()
     }
-  }, [session])
+  }, [user])
 
   const apiCall = async (endpoint: string, options: RequestInit = {}) => {
     const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-40eaaba9${endpoint}`, {
       headers: {
-        'Authorization': `Bearer ${session?.access_token}`,
+  // 'Authorization': `Bearer ${user?.access_token || ''}`,
         'Content-Type': 'application/json',
         ...options.headers
       },
@@ -100,17 +100,13 @@ export const AdminDashboard: React.FC = () => {
     try {
       setLoading(true)
       
-      // Load analytics
-      const analyticsData = await apiCall('/analytics/overview')
-      setAnalytics(analyticsData.analytics)
-      
-      // Load fairs
-      const fairsData = await apiCall('/fairs')
-      setFairs(fairsData.fairs)
-      
-      // Load exhibitors
-      const exhibitorsData = await apiCall('/exhibitors')
-      setExhibitors(exhibitorsData.exhibitors)
+  // Example: Replace with your PHP backend endpoints
+  // const analyticsData = await apiCall('/analytics/overview')
+  // setAnalytics(analyticsData.analytics)
+  const fairsData = await apiCall('/items')
+  setFairs(Array.isArray(fairsData) ? fairsData : fairsData.fairs || [])
+  // const exhibitorsData = await apiCall('/exhibitors')
+  // setExhibitors(Array.isArray(exhibitorsData) ? exhibitorsData : exhibitorsData.exhibitors || [])
       
     } catch (error) {
       console.error('Failed to load dashboard data:', error)

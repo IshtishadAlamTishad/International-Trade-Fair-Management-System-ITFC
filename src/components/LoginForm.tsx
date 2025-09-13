@@ -5,13 +5,14 @@ import { Label } from './ui/label'
 import { Alert, AlertDescription } from './ui/alert'
 import { Eye, EyeOff } from 'lucide-react'
 
+
 interface LoginFormProps {
-  onLogin: (email: string, password: string) => Promise<void>
+  onLogin: (username: string, password: string) => Promise<void>
 }
 
 export function LoginForm({ onLogin }: LoginFormProps) {
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: ''
   })
   const [showPassword, setShowPassword] = useState(false)
@@ -22,9 +23,8 @@ export function LoginForm({ onLogin }: LoginFormProps) {
     e.preventDefault()
     setLoading(true)
     setError('')
-
     try {
-      await onLogin(formData.email, formData.password)
+      await onLogin(formData.username, formData.password)
     } catch (err: any) {
       setError(err.message || 'Login failed')
     } finally {
@@ -48,15 +48,15 @@ export function LoginForm({ onLogin }: LoginFormProps) {
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="username">Username</Label>
         <Input
-          id="email"
-          name="email"
-          type="email"
+          id="username"
+          name="username"
+          type="text"
           required
-          value={formData.email}
+          value={formData.username}
           onChange={handleChange}
-          placeholder="Enter your email"
+          placeholder="Enter your username or email"
         />
       </div>
 
