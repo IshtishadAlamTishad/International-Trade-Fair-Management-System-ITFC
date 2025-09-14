@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - ITFC Trade Fair</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-4">
+          <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-lg font-bold">ITFC</div>
+          <h1 class="text-xl font-semibold text-gray-900">ITFC Trade Fair</h1>
+          <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded font-semibold ml-2">Administrator</span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button class="hover:bg-gray-100 p-2 rounded transition" title="Notifications">
+            <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67 7.165 6 9.388 6 12v2.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          </button>
+          <button class="hover:bg-gray-100 p-2 rounded transition" title="Settings">
+            <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+          </button>
+          <span class="text-sm text-gray-700">Welcome, Admin</span>
+          <button class="flex items-center text-sm text-gray-600 hover:text-blue-600 transition">
+            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="max-w-7xl mx-auto px-6 py-8 fade-in">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Administrator Dashboard</h1>
+      <p class="text-gray-600 mt-2">Manage trade fairs, exhibitors, and track performance</p>
+    </div>
+    <!-- Analytics Overview (faithful to .tsx) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-600 flex flex-col gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-blue-600"><svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg></span>
+          <span class="text-sm font-medium text-gray-700">Active Fairs</span>
+        </div>
+        <div class="text-3xl font-bold">3</div>
+        <span class="text-xs text-gray-400">Current active events</span>
+      </div>
+      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-green-600 flex flex-col gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-green-600"><svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg></span>
+          <span class="text-sm font-medium text-gray-700">Total Exhibitors</span>
+        </div>
+        <div class="text-3xl font-bold">24</div>
+        <span class="text-xs text-gray-400">5 pending approval</span>
+      </div>
+      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-purple-600 flex flex-col gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-purple-600"><svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg></span>
+          <span class="text-sm font-medium text-gray-700">Registered Visitors</span>
+        </div>
+        <div class="text-3xl font-bold">120</div>
+        <span class="text-xs text-gray-400">For upcoming events</span>
+      </div>
+      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-yellow-500 flex flex-col gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-yellow-500"><svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg></span>
+          <span class="text-sm font-medium text-gray-700">Total Revenue</span>
+        </div>
+        <div class="text-3xl font-bold">$12,000</div>
+        <span class="text-xs text-gray-400">From stall bookings</span>
+      </div>
+    </div>
+    <!-- Main Content Tabs (faithful to .tsx, static demo) -->
+    <div class="bg-white rounded-xl shadow p-6 mt-8">
+      <div class="flex gap-2 mb-6">
+        <button class="tab-btn px-4 py-2 rounded-lg font-medium bg-blue-600 text-white" data-tab="activities">Recent Activities</button>
+        <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-blue-600 text-blue-600 bg-white" data-tab="fairs">Fairs</button>
+        <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-blue-600 text-blue-600 bg-white" data-tab="exhibitors">Exhibitors</button>
+        <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-blue-600 text-blue-600 bg-white" data-tab="visitors">Visitors</button>
+      </div>
+      <div id="admin-tab-content">
+        <ul class="divide-y divide-gray-100">
+          <li class="py-3 flex items-center justify-between">
+            <span class="flex items-center gap-2 text-green-600 font-medium"><svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> System initialized with demo data</span>
+            <span class="text-xs text-gray-400">Just now</span>
+          </li>
+          <li class="py-3 flex items-center justify-between">
+            <span class="flex items-center gap-2 text-blue-600 font-medium"><svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg> Trade fair platform activated</span>
+            <span class="text-xs text-gray-400">Today</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script src="../asset/js/adminDashboard.js"></script>
+  </main>
+</body>
+</html>

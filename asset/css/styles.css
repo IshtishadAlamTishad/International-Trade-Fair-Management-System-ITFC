@@ -1,0 +1,156 @@
+/* Main CSS for ITFC Trade Fair Platform (extracted from Tailwind and globals.css)
+   This file will be extended as we add more components. */
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+  color: #22223b;
+  margin: 0;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+  margin: 0;
+}
+
+.bg-white { background: #fff; }
+.bg-blue-50 { background: #eff6ff; }
+.shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.shadow-xl { box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+.border { border: 1px solid #e5e7eb; }
+.border-b { border-bottom: 1px solid #e5e7eb; }
+
+.max-w-6xl { max-width: 72rem; margin: 0 auto; }
+.max-w-md { max-width: 28rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+.flex { display: flex; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.text-center { text-align: center; }
+.w-full { width: 100%; }
+
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+
+.space-y-1 > * + * { margin-top: 0.25rem; }
+.space-y-2 > * + * { margin-top: 0.5rem; }
+.space-y-4 > * + * { margin-top: 1rem; }
+.space-y-6 > * + * { margin-top: 1.5rem; }
+.space-y-8 > * + * { margin-top: 2rem; }
+
+.grid { display: grid; }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+.gap-12 { gap: 3rem; }
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #3b82f6;
+  transition: box-shadow 0.2s;
+}
+.card.green { border-left-color: #22c55e; }
+.card.purple { border-left-color: #a21caf; }
+
+.button {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  margin-bottom: 0.25rem;
+}
+.button:hover {
+  background: #2563eb;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  box-sizing: border-box;
+  background: #f9fafb;
+  transition: border 0.2s;
+}
+.input:focus {
+  border: 1.5px solid #3b82f6;
+  outline: none;
+}
+
+.label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  display: block;
+  color: #22223b;
+}
+
+.rounded { border-radius: 8px; }
+.rounded-lg { border-radius: 12px; }
+
+.text-blue-600 { color: #2563eb; }
+.text-green-600 { color: #22c55e; }
+.text-purple-600 { color: #a21caf; }
+.text-gray-900 { color: #22223b; }
+.text-gray-600 { color: #6b7280; }
+.text-gray-500 { color: #9ca3af; }
+.text-blue-800 { color: #1e40af; }
+.text-blue-700 { color: #1d4ed8; }
+.text-blue-900 { color: #1e3a8a; }
+.text-red-600 { color: #dc2626; }
+.font-bold { font-weight: 700; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.text-2xl { font-size: 2rem; }
+.text-5xl { font-size: 3rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.25rem; }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+
+/* Responsive grid for AuthPage */
+@media (max-width: 1024px) {
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  .gap-12 {
+    gap: 2rem;
+  }
+  .max-w-6xl {
+    padding: 0 1rem;
+  }
+}
+
+/* Responsive card and form */
+@media (max-width: 600px) {
+  .card {
+    padding: 1rem;
+  }
+  .max-w-md {
+    max-width: 100%;
+  }
+  .p-8 { padding: 1rem; }
+  .mb-12 { margin-bottom: 2rem; }
+  .text-5xl { font-size: 2rem; }
+}

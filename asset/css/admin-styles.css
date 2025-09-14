@@ -1,0 +1,29 @@
+.fade-in {
+	animation: fadeIn 0.7s ease;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; transform: translateY(24px); }
+	to { opacity: 1; transform: none; }
+}
+/* Admin Dashboard Custom Styles (optional, for minor tweaks only) */
+/* Do not change layout or design, only allow for admin-specific overrides if needed */
+
+body {
+	/* Subtle admin background tint */
+	background-color: #f7faff;
+}
+
+header {
+	/* Slightly bolder border for admin */
+	border-bottom: 2px solid #2563eb !important;
+}
+
+.border-blue-600 {
+	/* Stronger blue for admin analytics */
+	border-color: #2563eb !important;
+}
+
+.bg-blue-600 {
+	background-color: #2563eb !important;
+}
