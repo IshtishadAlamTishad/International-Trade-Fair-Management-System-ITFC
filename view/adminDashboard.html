@@ -73,25 +73,170 @@
         <span class="text-xs text-gray-400">From stall bookings</span>
       </div>
     </div>
-    <!-- Main Content Tabs (faithful to .tsx, static demo) -->
+    <!-- Main Content Tabs (full TSX fidelity) -->
     <div class="bg-white rounded-xl shadow p-6 mt-8">
-      <div class="flex gap-2 mb-6">
-        <button class="tab-btn px-4 py-2 rounded-lg font-medium bg-blue-600 text-white" data-tab="activities">Recent Activities</button>
-        <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-blue-600 text-blue-600 bg-white" data-tab="fairs">Fairs</button>
+      <div class="grid w-full grid-cols-5 gap-2 mb-6">
+        <button class="tab-btn px-4 py-2 rounded-lg font-medium bg-blue-600 text-white" data-tab="overview">Overview</button>
+        <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-blue-600 text-blue-600 bg-white" data-tab="fairs">Fair Management</button>
         <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-blue-600 text-blue-600 bg-white" data-tab="exhibitors">Exhibitors</button>
-        <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-blue-600 text-blue-600 bg-white" data-tab="visitors">Visitors</button>
+        <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-blue-600 text-blue-600 bg-white" data-tab="halls">Halls & Stalls</button>
+        <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-blue-600 text-blue-600 bg-white" data-tab="analytics">Analytics</button>
       </div>
       <div id="admin-tab-content">
-        <ul class="divide-y divide-gray-100">
-          <li class="py-3 flex items-center justify-between">
-            <span class="flex items-center gap-2 text-green-600 font-medium"><svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> System initialized with demo data</span>
-            <span class="text-xs text-gray-400">Just now</span>
-          </li>
-          <li class="py-3 flex items-center justify-between">
-            <span class="flex items-center gap-2 text-blue-600 font-medium"><svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg> Trade fair platform activated</span>
-            <span class="text-xs text-gray-400">Today</span>
-          </li>
-        </ul>
+        <!-- Overview Tab (default) -->
+        <div id="tab-overview">
+          <div class="grid lg:grid-cols-2 gap-6 mb-6">
+            <!-- Recent Activities -->
+            <div class="bg-white rounded-lg shadow p-4">
+              <h2 class="font-semibold mb-2">Recent Activities</h2>
+              <ul class="divide-y divide-gray-100">
+                <li class="py-3 flex items-center justify-between">
+                  <span class="flex items-center gap-2 text-green-600 font-medium"><svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> System initialized with demo data</span>
+                  <span class="text-xs text-gray-400">Just now</span>
+                </li>
+                <li class="py-3 flex items-center justify-between">
+                  <span class="flex items-center gap-2 text-blue-600 font-medium"><svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg> Trade fair platform activated</span>
+                  <span class="text-xs text-gray-400">Today</span>
+                </li>
+              </ul>
+            </div>
+            <!-- Pending Approvals -->
+            <div class="bg-white rounded-lg shadow p-4">
+              <h2 class="font-semibold mb-2">Pending Approvals</h2>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                  <div>
+                    <span class="font-medium">Tech Innovators Ltd.</span>
+                    <span class="ml-2 text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">Pending</span>
+                  </div>
+                  <button class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs">Approve</button>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                  <div>
+                    <span class="font-medium">AI Solutions Inc.</span>
+                    <span class="ml-2 text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">Pending</span>
+                  </div>
+                  <button class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs">Approve</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg p-6 flex items-center justify-between">
+              <div>
+                <p class="text-blue-100">Platform Status</p>
+                <p class="text-3xl font-bold">Active</p>
+              </div>
+              <svg class="h-12 w-12 text-blue-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3v18h18"/></svg>
+            </div>
+            <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg p-6 flex items-center justify-between">
+              <div>
+                <p class="text-green-100">Avg Rating</p>
+                <p class="text-3xl font-bold">4.7</p>
+              </div>
+              <svg class="h-12 w-12 text-green-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12,2 15,8.5 22,9.3 17,14.1 18.2,21 12,17.8 5.8,21 7,14.1 2,9.3 9,8.5"/></svg>
+            </div>
+            <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-lg p-6 flex items-center justify-between">
+              <div>
+                <p class="text-purple-100">System Health</p>
+                <p class="text-3xl font-bold">100%</p>
+              </div>
+              <svg class="h-12 w-12 text-purple-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18"/></svg>
+            </div>
+          </div>
+        </div>
+        <!-- Fair Management Tab -->
+        <div id="tab-fairs" class="hidden">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold">Trade Fair Management</h2>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center"><svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg> Create New Fair</button>
+          </div>
+          <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="font-semibold mb-2">All Trade Fairs</h3>
+            <div class="flex items-center space-x-4 mb-4">
+              <input class="border rounded px-3 py-2" placeholder="Search fairs..." />
+              <button class="border border-blue-600 text-blue-600 px-3 py-1 rounded">Filter</button>
+              <button class="border border-blue-600 text-blue-600 px-3 py-1 rounded">Export</button>
+            </div>
+            <div class="space-y-4">
+              <div class="border-l-4 border-green-500 bg-gray-50 rounded p-4 flex justify-between items-center">
+                <div>
+                  <div class="font-bold">International Tech Expo 2024</div>
+                  <div class="text-sm text-gray-600">New York • Mar 15-17</div>
+                </div>
+                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Active</span>
+              </div>
+              <div class="border-l-4 border-blue-500 bg-gray-50 rounded p-4 flex justify-between items-center">
+                <div>
+                  <div class="font-bold">Fashion Week 2024</div>
+                  <div class="text-sm text-gray-600">Paris • Apr 20-25</div>
+                </div>
+                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Upcoming</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Exhibitors Tab -->
+        <div id="tab-exhibitors" class="hidden">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold">Exhibitor Management</h2>
+            <div class="flex space-x-2">
+              <button class="border border-blue-600 text-blue-600 px-3 py-1 rounded">Export List</button>
+              <button class="bg-blue-600 text-white px-3 py-1 rounded">Send Notifications</button>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="font-semibold mb-2">Exhibitor Applications</h3>
+            <table class="min-w-full text-sm">
+              <thead>
+                <tr class="bg-gray-100">
+                  <th class="px-4 py-2 text-left">Company</th>
+                  <th class="px-4 py-2 text-left">Status</th>
+                  <th class="px-4 py-2 text-left">Stalls</th>
+                  <th class="px-4 py-2 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="px-4 py-2">Tech Innovators Ltd.</td>
+                  <td class="px-4 py-2"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Pending</span></td>
+                  <td class="px-4 py-2">A1, A2</td>
+                  <td class="px-4 py-2"><button class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Approve</button></td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2">AI Solutions Inc.</td>
+                  <td class="px-4 py-2"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Pending</span></td>
+                  <td class="px-4 py-2">B1</td>
+                  <td class="px-4 py-2"><button class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Approve</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Halls & Stalls Tab -->
+        <div id="tab-halls" class="hidden">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold">Halls & Stalls Management</h2>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center"><svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg> Add New Hall</button>
+          </div>
+          <div class="bg-white rounded-lg shadow p-4 text-center">
+            <svg class="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+            <p class="text-gray-600">Hall management interface will be available here</p>
+            <p class="text-sm text-gray-500 mt-2">Configure halls, stalls, and layout management</p>
+          </div>
+        </div>
+        <!-- Analytics Tab -->
+        <div id="tab-analytics" class="hidden">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold">Analytics & Reports</h2>
+            <button class="border border-blue-600 text-blue-600 px-3 py-1 rounded">Export Report</button>
+          </div>
+          <div class="bg-white rounded-lg shadow p-4 text-center">
+            <svg class="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3v18h18"/></svg>
+            <p class="text-gray-600">Detailed analytics dashboard coming soon</p>
+            <p class="text-sm text-gray-500 mt-2">Charts, trends, and detailed reports</p>
+          </div>
+        </div>
       </div>
     </div>
     <script src="../asset/js/adminDashboard.js"></script>

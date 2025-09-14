@@ -21,6 +21,7 @@ const user = {
   company: 'Tech Innovators Ltd.'
 };
 
+
 function renderExhibitorDashboard() {
   const el = document.getElementById('exhibitor-dashboard');
   el.innerHTML = `
@@ -85,26 +86,142 @@ function renderExhibitorDashboard() {
           <span class="text-xs text-gray-400">From stall bookings</span>
         </div>
       </div>
-      <!-- Main Content Tabs -->
+      <!-- Main Content Tabs (full TSX fidelity) -->
       <div class="bg-white rounded-xl shadow p-6 mt-8">
-        <div class="flex gap-2 mb-6">
-          <button class="tab-btn px-4 py-2 rounded-lg font-medium bg-green-600 text-white" data-tab="products">Products</button>
-          <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-green-600 text-green-600 bg-white" data-tab="stalls">Stalls</button>
+        <div class="grid w-full grid-cols-5 gap-2 mb-6">
+          <button class="tab-btn px-4 py-2 rounded-lg font-medium bg-green-600 text-white" data-tab="overview">Overview</button>
+          <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-green-600 text-green-600 bg-white" data-tab="products">Products</button>
+          <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-green-600 text-green-600 bg-white" data-tab="stalls">My Stalls</button>
           <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-green-600 text-green-600 bg-white" data-tab="payments">Payments</button>
+          <button class="tab-btn px-4 py-2 rounded-lg font-medium border border-green-600 text-green-600 bg-white" data-tab="analytics">Performance</button>
         </div>
-        <div id="exhibitor-tab-content"></div>
+        <div id="exhibitor-tab-content">
+          <!-- Overview Tab (default) -->
+          <div id="tab-overview">
+            <div class="grid lg:grid-cols-2 gap-6 mb-6">
+              <div class="bg-white rounded-lg shadow p-4">
+                <h2 class="font-semibold mb-2">Company Information</h2>
+                <div class="grid grid-cols-2 gap-4">
+                  <div><span class="text-sm text-gray-500">Company Name</span><p class="mt-1 font-medium">${exhibitorData.company}</p></div>
+                  <div><span class="text-sm text-gray-500">Contact Person</span><p class="mt-1 font-medium">${user.firstName} ${user.lastName}</p></div>
+                  <div><span class="text-sm text-gray-500">Email</span><p class="mt-1">${user.email}</p></div>
+                  <div><span class="text-sm text-gray-500">Status</span><p class="mt-1 capitalize">${exhibitorData.status}</p></div>
+                </div>
+                <div class="mt-4"><span class="text-sm text-gray-500">Business Category</span><p class="mt-1">Technology Solutions & AI Services</p></div>
+              </div>
+              <div class="bg-white rounded-lg shadow p-4">
+                <h2 class="font-semibold mb-2">Current Participation</h2>
+                <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="font-semibold text-blue-900">International Tech Expo 2024</span>
+                    <span class="bg-blue-600 text-white px-2 py-1 rounded text-xs">Active</span>
+                  </div>
+                  <div class="grid grid-cols-2 gap-4 text-sm text-blue-800">
+                    <div>Location: New York</div>
+                    <div>Date: Mar 15-17</div>
+                    <div>Stall: Tech Pavilion A</div>
+                    <div>Type: Technology</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 mt-6">
+              <h2 class="font-semibold mb-2">Allocated Stalls</h2>
+              <div class="grid md:grid-cols-3 gap-4">
+                ${exhibitorData.stalls.map((stall, index) => `<div class="bg-gray-50 rounded-lg p-4 flex flex-col items-center border"><div class="font-bold text-lg">Stall ${stall}</div><span class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded font-semibold mt-2">Allocated</span></div>`).join('')}
+              </div>
+            </div>
+          </div>
+          <!-- Products Tab -->
+          <div id="tab-products" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-semibold">Product Catalog</h2>
+              <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center"><svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg> Add New Product</button>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+              <h3 class="font-semibold mb-2">Showcase Products</h3>
+              <div class="flex items-center space-x-4 mb-4">
+                <input class="border rounded px-3 py-2" placeholder="Search products..." />
+                <button class="border border-green-600 text-green-600 px-3 py-1 rounded">Filter</button>
+              </div>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                ${exhibitorData.products.map(product => `<div class="bg-gray-50 rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border"><div><div class="font-bold text-lg">${product.name}</div><div class="text-gray-600 text-sm mb-1">${product.description}</div><span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded font-semibold mr-2">${product.category}</span>${product.featured ? '<span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded font-semibold">Featured</span>' : ''}</div><div class="flex flex-col items-end"><div class="text-lg font-bold">$${product.price}</div><button class="mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm">Edit</button></div></div>`).join('')}
+              </div>
+            </div>
+          </div>
+          <!-- Stalls Tab -->
+          <div id="tab-stalls" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-semibold">My Stalls</h2>
+              <button class="border border-green-600 text-green-600 px-4 py-2 rounded">Request Additional Stall</button>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+              <h3 class="font-semibold mb-2">Stall Management</h3>
+              <div class="grid gap-4">
+                ${exhibitorData.stalls.map(stall => `<div class="bg-gray-50 rounded-lg p-4 flex items-center justify-between border"><div class="font-bold text-lg">Stall ${stall}</div><span class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded font-semibold">Allocated</span></div>`).join('')}
+              </div>
+            </div>
+          </div>
+          <!-- Payments Tab -->
+          <div id="tab-payments" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-semibold">Payment Management</h2>
+              <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center"><svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/></svg> Make Payment</button>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4">
+              <h3 class="font-semibold mb-2">Payment History</h3>
+              <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                  <thead>
+                    <tr class="bg-gray-100">
+                      <th class="px-4 py-2 text-left">Date</th>
+                      <th class="px-4 py-2 text-left">Description</th>
+                      <th class="px-4 py-2 text-left">Amount</th>
+                      <th class="px-4 py-2 text-left">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${exhibitorData.payments.map(payment => `<tr><td class="px-4 py-2">${payment.date}</td><td class="px-4 py-2">${payment.description}</td><td class="px-4 py-2">$${payment.amount}</td><td class="px-4 py-2"><span class="inline-block px-2 py-1 rounded text-xs font-semibold ${payment.status === 'completed' ? 'bg-green-100 text-green-800' : payment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">${payment.status}</span></td></tr>`).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- Analytics Tab -->
+          <div id="tab-analytics" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-semibold">Performance Analytics</h2>
+              <button class="border border-green-600 text-green-600 px-4 py-2 rounded">Export Report</button>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 text-center">
+              <svg class="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+              <p class="text-gray-600">Performance analytics coming soon</p>
+              <p class="text-sm text-gray-500 mt-2">Visitor engagement, lead generation, and sales metrics</p>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
     </div>
   `;
-  renderExhibitorTab('products');
+  // Tab logic
+  function showTab(tab) {
+    const tabs = ['overview', 'products', 'stalls', 'payments', 'analytics'];
+    tabs.forEach(t => {
+      const el = document.getElementById('tab-' + t);
+      if (el) el.classList.add('hidden');
+    });
+    const active = document.getElementById('tab-' + tab);
+    if (active) active.classList.remove('hidden');
+  }
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       document.querySelectorAll('.tab-btn').forEach(b => b.className = 'tab-btn px-4 py-2 rounded-lg font-medium border border-green-600 text-green-600 bg-white');
       this.className = 'tab-btn px-4 py-2 rounded-lg font-medium bg-green-600 text-white';
-      renderExhibitorTab(this.getAttribute('data-tab'));
+      showTab(this.getAttribute('data-tab'));
     });
   });
+  showTab('overview');
 }
 
 function renderExhibitorTab(tab) {

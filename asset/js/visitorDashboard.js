@@ -115,7 +115,10 @@ function renderTab(tab) {
     `;
   } else if (tab === 'tickets') {
     content.innerHTML = `
-      <h2 class="text-xl font-semibold mb-4">My Tickets</h2>
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">My Tickets</h2>
+        <button class="border border-purple-600 text-purple-600 px-4 py-2 rounded">Export Ticket</button>
+      </div>
       <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-lg mb-6">
         <div class="flex justify-between items-start">
           <div>
@@ -146,7 +149,10 @@ function renderTab(tab) {
     `;
   } else if (tab === 'events') {
     content.innerHTML = `
-      <h2 class="text-xl font-semibold mb-4">Available Trade Fairs</h2>
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Available Trade Fairs</h2>
+        <button class="border border-purple-600 text-purple-600 px-4 py-2 rounded">Browse All</button>
+      </div>
       <div class="grid gap-6">
         ${fairs.map(fair => `
           <div class="bg-white border-l-4 ${fair.status === 'active' ? 'border-blue-500' : fair.status === 'upcoming' ? 'border-purple-500' : 'border-gray-500'} rounded-lg shadow p-6">
@@ -179,7 +185,10 @@ function renderTab(tab) {
     `;
   } else if (tab === 'feedback') {
     content.innerHTML = `
-      <h2 class="text-xl font-semibold mb-4">Feedback & Reviews</h2>
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Feedback & Reviews</h2>
+        <button class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 flex items-center">Submit New Feedback</button>
+      </div>
       <form id="feedback-form" class="mb-6">
         <div class="mb-2">
           <label class="block font-medium mb-1">Select Trade Fair</label>
@@ -205,6 +214,9 @@ function renderTab(tab) {
         </div>
         <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Submit Feedback</button>
       </form>
+      <div class="flex justify-end mb-2">
+        <button class="border border-purple-600 text-purple-600 px-4 py-2 rounded">Export Report</button>
+      </div>
       <div class="bg-white rounded-lg shadow p-4">
         <h3 class="font-semibold mb-2">Your Previous Reviews</h3>
         ${feedback.length === 0 ? `<div class="text-gray-500">No feedback submitted yet.</div>` : feedback.map(item => `
