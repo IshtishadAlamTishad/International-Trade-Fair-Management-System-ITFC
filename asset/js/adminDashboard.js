@@ -17,7 +17,7 @@ function fetchFairs() {
 
 // Fetch all exhibitors
 function fetchExhibitors() {
-  return ajaxRequest('../controller/item/exhibitorController.php');
+  return ajaxRequest('../controller/user/exhibitorController.php');
 }
 
 // Fetch all halls
@@ -169,12 +169,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     };
     window.approveExhibitor = function(exhibitorId) {
-      ajaxRequest('../controller/item/exhibitorController.php', 'POST', { action: 'approve', ExhibitorID: exhibitorId })
+      ajaxRequest('../controller/user/exhibitorController.php', 'POST', { action: 'approve', ExhibitorID: exhibitorId })
         .then(() => location.reload());
     };
     window.deleteExhibitor = function(exhibitorId) {
       if (confirm('Delete this exhibitor?')) {
-        ajaxRequest('../controller/item/exhibitorController.php', 'POST', { action: 'delete', ExhibitorID: exhibitorId })
+        ajaxRequest('../controller/user/exhibitorController.php', 'POST', { action: 'delete', ExhibitorID: exhibitorId })
           .then(() => location.reload());
       }
     };
