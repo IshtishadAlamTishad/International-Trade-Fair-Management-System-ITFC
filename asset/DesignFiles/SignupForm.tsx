@@ -90,31 +90,16 @@
 //       </div>
 
 //       <div className="space-y-2">
-//         <Label htmlFor="password">Password</Label>
-//         <div className="relative">
-//           <Input
-//             id="password"
-//             name="password"
-//             type={showPassword ? 'text' : 'password'}
-//             required
-//             value={formData.password}
-//             onChange={handleChange}
-//             placeholder="Create a password"
-//           />
-//           <Button
-//             type="button"
-//             variant="ghost"
-//             size="sm"
-//             className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-//             onClick={() => setShowPassword(!showPassword)}
-//           >
-//             {showPassword ? (
-//               <EyeOff className="h-4 w-4" />
-//             ) : (
-//               <Eye className="h-4 w-4" />
-//             )}
-//           </Button>
-//         </div>
+//         <Label htmlFor="phone">Phone Number</Label>
+//         <Input
+//           id="phone"
+//           name="phone"
+//           type="text"
+//           required
+//           value={formData.phone}
+//           onChange={handleChange}
+//           placeholder="Enter your phone number"
+//         />
 //       </div>
 
 //       <div className="space-y-2">

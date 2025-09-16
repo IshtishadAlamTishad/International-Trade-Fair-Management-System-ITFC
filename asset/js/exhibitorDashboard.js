@@ -41,15 +41,24 @@ function fetchPayments() {
   return ajaxRequest('../controller/item/paymentController.php');
 }
 
-// Fetch exhibitor info (mocked for now)
+// Fetch exhibitor info (schema-aligned)
 function fetchExhibitorInfo() {
-  // You can replace this with a real AJAX call to exhibitorController.php if needed
-  return Promise.resolve({
-    company: 'Tech Innovators Ltd.',
-    status: 'approved',
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john@techinnovators.com'
+  // Replace with AJAX call to exhibitorController.php for real data
+  return ajaxRequest('../controller/item/exhibitorController.php', 'GET').then(data => {
+    // Assume data is an array, take the first exhibitor (current user)
+    if (Array.isArray(data) && data.length > 0) {
+      return data[0];
+    }
+    // Fallback demo
+    return {
+      ExhibitorID: 1,
+      EName: 'Tech Innovators Ltd.',
+      Contact: 'John Doe',
+      Email: 'john@techinnovators.com',
+      Phone: '1234567890',
+      EmailAddress: 'john@techinnovators.com',
+      Status: 'approved'
+    };
   });
 }
 
@@ -76,7 +85,7 @@ async function renderExhibitorDashboard() {
             <button class="hover:bg-gray-100 p-2 rounded transition" title="Notifications">
               <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67 7.165 6 9.388 6 12v2.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
             </button>
-            <span class="text-sm text-gray-700">${exhibitor.company}</span>
+            <span class="text-sm text-gray-700">${exhibitor.EName}</span>
             <button class="flex items-center text-sm text-gray-600 hover:text-green-600 transition">
               <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg>
               Logout
@@ -96,8 +105,8 @@ async function renderExhibitorDashboard() {
             <span class="text-green-600"><svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>
             <span class="text-sm font-medium text-gray-700">Registration Status</span>
           </div>
-          <div class="text-3xl font-bold capitalize">${exhibitor.status}</div>
-          <span class="inline-block mt-2 bg-green-100 text-green-800 text-xs px-2 py-1 rounded font-semibold">${exhibitor.status === 'approved' ? 'Active Exhibitor' : 'Pending Approval'}</span>
+          <div class="text-3xl font-bold capitalize">${exhibitor.Status || ''}</div>
+          <span class="inline-block mt-2 bg-green-100 text-green-800 text-xs px-2 py-1 rounded font-semibold">${(exhibitor.Status || '').toLowerCase() === 'approved' ? 'Active Exhibitor' : 'Pending Approval'}</span>
         </div>
         <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-600 flex flex-col gap-2">
           <div class="flex items-center gap-2">
@@ -139,12 +148,12 @@ async function renderExhibitorDashboard() {
               <div class="bg-white rounded-lg shadow p-4">
                 <h2 class="font-semibold mb-2">Company Information</h2>
                 <div class="grid grid-cols-2 gap-4">
-                  <div><span class="text-sm text-gray-500">Company Name</span><p class="mt-1 font-medium">${exhibitor.company}</p></div>
-                  <div><span class="text-sm text-gray-500">Contact Person</span><p class="mt-1 font-medium">${exhibitor.firstName} ${exhibitor.lastName}</p></div>
-                  <div><span class="text-sm text-gray-500">Email</span><p class="mt-1">${exhibitor.email}</p></div>
-                  <div><span class="text-sm text-gray-500">Status</span><p class="mt-1 capitalize">${exhibitor.status}</p></div>
+                  <div><span class="text-sm text-gray-500">Company Name</span><p class="mt-1 font-medium">${exhibitor.EName}</p></div>
+                  <div><span class="text-sm text-gray-500">Contact Person</span><p class="mt-1 font-medium">${exhibitor.Contact}</p></div>
+                  <div><span class="text-sm text-gray-500">Email</span><p class="mt-1">${exhibitor.EmailAddress || exhibitor.Email}</p></div>
+                  <div><span class="text-sm text-gray-500">Status</span><p class="mt-1 capitalize">${exhibitor.Status || ''}</p></div>
                 </div>
-                <div class="mt-4"><span class="text-sm text-gray-500">Business Category</span><p class="mt-1">Technology Solutions & AI Services</p></div>
+                <div class="mt-4"><span class="text-sm text-gray-500">Phone</span><p class="mt-1">${exhibitor.Phone || ''}</p></div>
               </div>
               <div class="bg-white rounded-lg shadow p-4">
                 <h2 class="font-semibold mb-2">Current Participation</h2>
@@ -181,7 +190,7 @@ async function renderExhibitorDashboard() {
                 <button class="border border-green-600 text-green-600 px-3 py-1 rounded">Filter</button>
               </div>
               <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                ${products.map(product => `<div class="bg-gray-50 rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border"><div><div class="font-bold text-lg">${product.PName || product.name}</div><div class="text-gray-600 text-sm mb-1">${product.Description || product.description}</div><span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded font-semibold mr-2">${product.Category || product.category}</span>${product.featured ? '<span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded font-semibold">Featured</span>' : ''}</div><div class="flex flex-col items-end"><div class="text-lg font-bold">$${product.Price || product.price}</div><button class="mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm edit-product-btn" data-id="${product.ProductID}">Edit</button></div></div>`).join('')}
+                ${products.map(product => `<div class="bg-gray-50 rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border"><div><div class="font-bold text-lg">${product.PName}</div><div class="text-gray-600 text-sm mb-1">${product.Description}</div><span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded font-semibold mr-2">${product.Category}</span></div><div class="flex flex-col items-end"><div class="text-lg font-bold">$${product.Price}</div><button class="mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm edit-product-btn" data-id="${product.ProductID}">Edit</button></div></div>`).join('')}
               </div>
             </div>
           </div>
@@ -215,7 +224,7 @@ async function renderExhibitorDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    ${payments.map(payment => `<tr><td class="px-4 py-2">${payment.date || payment.PaymentDate}</td><td class="px-4 py-2">${payment.description || payment.PaymentMode}</td><td class="px-4 py-2">$${payment.amount || payment.Amount}</td><td class="px-4 py-2"><span class="inline-block px-2 py-1 rounded text-xs font-semibold ${payment.status === 'completed' ? 'bg-green-100 text-green-800' : payment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">${payment.status || payment.Status}</span></td></tr>`).join('')}
+                    ${payments.map(payment => `<tr><td class="px-4 py-2">${payment.PaymentDate || ''}</td><td class="px-4 py-2">${payment.PaymentMode || ''}</td><td class="px-4 py-2">$${payment.Amount || ''}</td><td class="px-4 py-2"><span class="inline-block px-2 py-1 rounded text-xs font-semibold ${payment.Status === 'completed' ? 'bg-green-100 text-green-800' : payment.Status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}">${payment.Status || ''}</span></td></tr>`).join('')}
                   </tbody>
                 </table>
               </div>

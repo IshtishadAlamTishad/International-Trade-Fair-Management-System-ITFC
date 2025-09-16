@@ -192,11 +192,7 @@
             <h2 class="text-2xl font-semibold">Halls & Stalls Management</h2>
             <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center"><svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg> Add New Hall</button>
           </div>
-          <div class="bg-white rounded-lg shadow p-4 text-center">
-            <svg class="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
-            <p class="text-gray-600">Hall management interface will be available here</p>
-            <p class="text-sm text-gray-500 mt-2">Configure halls, stalls, and layout management</p>
-          </div>
+          <div id="halls-stalls-content" class="bg-white rounded-lg shadow p-4"></div>
         </div>
         <!-- Analytics Tab -->
         <div id="tab-analytics" class="hidden">

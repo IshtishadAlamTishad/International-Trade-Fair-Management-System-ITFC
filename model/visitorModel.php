@@ -5,78 +5,57 @@
 
 	function getAllVisitors() {
         $conn = getConnection();
-
         $query = "SELECT * FROM Visitor";
         $statement = oci_parse($conn, $query);
         oci_execute($statement);
-
-        $exhibitor = [];
+        $visitors = [];
         while ($row = oci_fetch_assoc($statement)) {
-            $exhibitor[] = $row;
+            $visitors[] = $row;
         }
-
         oci_free_statement($statement);
-        return $exhibitor;
+        return $visitors;
     }
 
-    function getExhibitorById($ExhibitorID) {
+    function getVisitorById($VisitorID) {
         $conn = getConnection();
-
-        $query = "SELECT * FROM Exhibitor WHERE ExhibitorID = $ExhibitorID";
+        $query = "SELECT * FROM Visitor WHERE VisitorID = $VisitorID";
         $statement = oci_parse($conn, $query);
         oci_execute($statement);
-
-        $exhibitor = []; 
+        $visitor = [];
         while ($row = oci_fetch_assoc($statement)) {
-            $exhibitor[] = $row;
+            $visitor[] = $row;
         }
-
         oci_free_statement($statement);
-        return $exhibitor; 
+        return $visitor;
     }
 
-    
-    function insertExhibitor($ExhibitorID, $EName, $Contact, $Email, $Phone, $EmailAddress) {
-
+    function insertVisitor($VisitorID, $FirstName, $LastName, $Contact, $Phone, $EmailAddress, $Interests) {
         $conn = getConnection();
-
-        $query = "INSERT INTO Exhibitor (ExhibitorID, EName, Contact, Email, Phone, EmailAddress) 
-                VALUES ($ExhibitorID, $EName, $Contact, $Email, $Phone, $EmailAddress)";
-        
+        $query = "INSERT INTO Visitor (VisitorID, FirstName, LastName, Contact, Phone, EmailAddress, Interests) 
+                VALUES ($VisitorID, '$FirstName', '$LastName', '$Contact', '$Phone', '$EmailAddress', '$Interests')";
         $statement = oci_parse($conn, $query);
         $result = oci_execute($statement);
         oci_free_statement($statement);
-
         return $result;
     }
 
-
-    function updateExhibitor($ExhibitorID, $EName, $Contact, $Email, $Phone, $EmailAddress) {
-
+    function updateVisitor($VisitorID, $FirstName, $LastName, $Contact, $Phone, $EmailAddress, $Interests) {
         $conn = getConnection();
-
-        $query = "UPDATE Exhibitor
-                SET ExhibitorID='$ExhibitorID', EName=$EName, Contact='$Contact', Email=$Email, 
-                    Phone=$Phone, EmailAddress='$EmailAddress'
-                WHERE ExhibitorID=$ExhibitorID";
-        
+        $query = "UPDATE Visitor
+                SET FirstName='$FirstName', LastName='$LastName', Contact='$Contact', Phone='$Phone', EmailAddress='$EmailAddress', Interests='$Interests'
+                WHERE VisitorID=$VisitorID";
         $statement = oci_parse($conn, $query);
         $result = oci_execute($statement);
         oci_free_statement($statement);
-
         return $result;
     }
 
-
-    function deleteExhibitor($ExhibitorID) {
-
+    function deleteVisitor($VisitorID) {
         $conn = getConnection();
-
-        $query = "DELETE FROM Exhibitor WHERE ExhibitorID=$ExhibitorID";
+        $query = "DELETE FROM Visitor WHERE VisitorID=$VisitorID";
         $statement = oci_parse($conn, $query);
         $result = oci_execute($statement);
         oci_free_statement($statement);
-        
         return $result;
     }
 

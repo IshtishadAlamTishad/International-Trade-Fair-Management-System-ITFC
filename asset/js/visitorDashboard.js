@@ -63,7 +63,7 @@ async function renderVisitorDashboard() {
             <button class="hover:bg-gray-100 p-2 rounded transition" title="Notifications">
               <svg class="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67 7.165 6 9.388 6 12v2.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
             </button>
-            <span class="text-sm text-gray-700">Welcome, ${profile.FirstName || profile.firstName}</span>
+            <span class="text-sm text-gray-700">Welcome, ${profile.FirstName}</span>
             <button class="flex items-center text-sm text-gray-600 hover:text-purple-600 transition">
               <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg>
               Logout
@@ -130,15 +130,16 @@ function renderTab(tab, profile, tickets, interests, feedbacks, fairs) {
   const content = document.getElementById('tab-content');
   if (tab === 'profile') {
     content.innerHTML = `
-      <h2 class="text-xl font-semibold mb-4">Welcome, ${profile.FirstName || profile.firstName}!</h2>
+      <h2 class="text-xl font-semibold mb-4">Welcome, ${profile.FirstName}!</h2>
       <div class="grid md:grid-cols-2 gap-6">
         <div class="bg-purple-50 p-4 rounded-lg mb-4">
-          <div class="font-medium">Name: ${profile.FirstName || profile.firstName} ${profile.LastName || profile.lastName}</div>
-          <div>Email: ${profile.EmailAddress || profile.email}</div>
+          <div class="font-medium">Name: ${profile.FirstName} ${profile.LastName}</div>
+          <div>Email: ${profile.EmailAddress}</div>
+          <div>Phone: ${profile.Phone}</div>
         </div>
         <div class="bg-blue-50 p-4 rounded-lg mb-4">
           <div class="font-medium">Interests</div>
-          <div>${Array.isArray(interests) ? interests.map(i => i.Interest || i).join(', ') : ''}</div>
+          <div>${Array.isArray(interests) ? interests.map(i => i.Interest).join(', ') : ''}</div>
         </div>
       </div>
     `;
@@ -151,7 +152,7 @@ function renderTab(tab, profile, tickets, interests, feedbacks, fairs) {
       <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-lg mb-6">
         <div class="flex justify-between items-start">
           <div>
-            <h3 class="text-2xl font-bold mb-2">${tickets[0]?.Type || tickets[0]?.type || 'N/A'} Access Pass</h3>
+            <h3 class="text-2xl font-bold mb-2">${tickets[0]?.Type || 'N/A'} Access Pass</h3>
             <p class="text-purple-100">ITFC Official Visitor Ticket</p>
           </div>
           <svg class="h-10 w-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
@@ -159,11 +160,11 @@ function renderTab(tab, profile, tickets, interests, feedbacks, fairs) {
         <div class="grid grid-cols-2 gap-6 mt-6">
           <div>
             <div class="text-purple-100 text-sm">Visitor Name</div>
-            <p class="font-semibold text-lg">${profile.FirstName || profile.firstName} ${profile.LastName || profile.lastName}</p>
+            <p class="font-semibold text-lg">${profile.FirstName} ${profile.LastName}</p>
           </div>
           <div>
             <div class="text-purple-100 text-sm">Ticket ID</div>
-            <p class="font-mono">${tickets[0]?.TicketID || tickets[0]?.id || 'N/A'}</p>
+            <p class="font-mono">${tickets[0]?.TicketID || 'N/A'}</p>
           </div>
           <div>
             <div class="text-purple-100 text-sm">Valid For</div>
@@ -171,7 +172,7 @@ function renderTab(tab, profile, tickets, interests, feedbacks, fairs) {
           </div>
           <div>
             <div class="text-purple-100 text-sm">Access Level</div>
-            <p class="font-semibold">${tickets[0]?.Type || tickets[0]?.type || 'N/A'}</p>
+            <p class="font-semibold">${tickets[0]?.Type || 'N/A'}</p>
           </div>
         </div>
       </div>

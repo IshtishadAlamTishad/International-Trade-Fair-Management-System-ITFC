@@ -105,53 +105,51 @@ document.addEventListener('DOMContentLoaded', function() {
           });
         }
         return;
-      }
-      if (tab === 'fairs') {
-        const fairsList = document.querySelector('#tab-fairs .space-y-4');
-        if (fairsList) {
-          fairsList.innerHTML = fairs.map(fair => `
-            <div class="border-l-4 border-green-500 bg-gray-50 rounded p-4 flex justify-between items-center">
-              <div>
-                <div class="font-bold">${fair.TName}</div>
-                <div class="text-sm text-gray-600">${fair.City} • ${fair.StartDate ? new Date(fair.StartDate).toLocaleDateString() : ''}-${fair.EndDate ? new Date(fair.EndDate).toLocaleDateString() : ''}</div>
-              </div>
-              <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">${fair.status || ''}</span>
-              <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs fair-edit-btn" data-id="${fair.FairID}">Edit</button>
-              <button class="bg-red-600 text-white px-3 py-1 rounded text-xs fair-delete-btn" data-id="${fair.FairID}">Delete</button>
-            </div>
-          `).join('');
-          // Attach event listeners for edit/delete
-          fairsList.querySelectorAll('.fair-edit-btn').forEach(btn => {
-            btn.onclick = function() { editFair(this.dataset.id); };
-          });
-          fairsList.querySelectorAll('.fair-delete-btn').forEach(btn => {
-            btn.onclick = function() { deleteFair(this.dataset.id); };
-          });
-        }
-      } else if (tab === 'exhibitors') {
-        const exhibitorTable = document.getElementById('exhibitor-applications-list');
-        if (exhibitorTable) {
-          exhibitorTable.innerHTML = exhibitors.map(ex => `
-            <tr>
-              <td class="px-4 py-2">${ex.CompanyName || ex.EName}</td>
-              <td class="px-4 py-2"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">${ex.Status || ''}</span></td>
-              <td class="px-4 py-2">${ex.Stalls || ''}</td>
-              <td class="px-4 py-2">
-                <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs exhibitor-approve-btn" data-id="${ex.ExhibitorID}">Approve</button>
-                <button class="bg-red-600 text-white px-3 py-1 rounded text-xs exhibitor-delete-btn" data-id="${ex.ExhibitorID}">Delete</button>
-              </td>
-            </tr>
-          `).join('');
-          // Attach event listeners for approve/delete
-          exhibitorTable.querySelectorAll('.exhibitor-approve-btn').forEach(btn => {
-            btn.onclick = function() { approveExhibitor(this.dataset.id); };
-          });
-          exhibitorTable.querySelectorAll('.exhibitor-delete-btn').forEach(btn => {
-            btn.onclick = function() { deleteExhibitor(this.dataset.id); };
-          });
-        }
       } else if (tab === 'halls') {
-        // No dynamic content yet for halls
+        // Render Halls & Stalls Table into the correct container
+        const container = document.getElementById('halls-stalls-content');
+        if (container) {
+          let html = '';
+          html += '<div class="mb-6">';
+          html += '<h3 class="font-semibold mb-2">Halls</h3>';
+          if (halls.length) {
+            html += '<table class="min-w-full text-sm mb-4"><thead><tr class="bg-gray-100">';
+            html += '<th class="px-4 py-2 text-left">Hall Name</th><th class="px-4 py-2 text-left">Location</th><th class="px-4 py-2 text-left">Building</th><th class="px-4 py-2 text-left">Floor</th><th class="px-4 py-2 text-left">Apt No</th><th class="px-4 py-2 text-left">Fair ID</th></tr></thead><tbody>';
+            html += halls.map(function(hall) {
+              return '<tr>' +
+                '<td class="px-4 py-2">' + (hall.HName || '') + '</td>' +
+                '<td class="px-4 py-2">' + (hall.Location || '') + '</td>' +
+                '<td class="px-4 py-2">' + (hall.BuildingName || '') + '</td>' +
+                '<td class="px-4 py-2">' + (hall.Floor || '') + '</td>' +
+                '<td class="px-4 py-2">' + (hall.AptNo || '') + '</td>' +
+                '<td class="px-4 py-2">' + (hall.FairID || '') + '</td>' +
+              '</tr>';
+            }).join('');
+            html += '</tbody></table>';
+          } else {
+            html += '<div class="text-gray-500 mb-4">No halls found.</div>';
+          }
+          html += '</div>';
+          html += '<div>';
+          html += '<h3 class="font-semibold mb-2">Stalls</h3>';
+          if (stalls.length) {
+            html += '<table class="min-w-full text-sm"><thead><tr class="bg-gray-100">';
+            html += '<th class="px-4 py-2 text-left">Stall ID</th><th class="px-4 py-2 text-left">Size</th><th class="px-4 py-2 text-left">Price</th><th class="px-4 py-2 text-left">Hall ID</th></tr></thead><tbody>';
+            html += stalls.map(function(stall) {
+              return '<tr>' +
+                '<td class="px-4 py-2">' + (stall.StallID || '') + '</td>' +
+                '<td class="px-4 py-2">' + (stall.S_ize || '') + '</td>' +
+                '<td class="px-4 py-2">' + (stall.Price || '') + '</td>' +
+                '<td class="px-4 py-2">' + (stall.HallID || '') + '</td>' +
+              '</tr>';
+            }).join('');
+            html += '</tbody></table>';
+          } else {
+            html += '<div class="text-gray-500">No stalls found.</div>';
+          }
+          html += '</div>';
+          container.innerHTML = html;
+        }
         return;
       } else if (tab === 'analytics') {
         // No dynamic content yet for analytics
@@ -182,5 +180,5 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     showTab('overview');
-  });
-});
+  }); // End of finally
+}); // End of DOMContentLoaded
