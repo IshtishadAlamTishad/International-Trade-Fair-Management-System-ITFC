@@ -104,22 +104,7 @@
             <!-- Pending Approvals -->
             <div class="bg-white rounded-lg shadow p-4">
               <h2 class="font-semibold mb-2">Pending Approvals</h2>
-              <div class="space-y-3">
-                <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                  <div>
-                    <span class="font-medium">Tech Innovators Ltd.</span>
-                    <span class="ml-2 text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">Pending</span>
-                  </div>
-                  <button class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs">Approve</button>
-                </div>
-                <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                  <div>
-                    <span class="font-medium">AI Solutions Inc.</span>
-                    <span class="ml-2 text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">Pending</span>
-                  </div>
-                  <button class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs">Approve</button>
-                </div>
-              </div>
+              <div id="pending-approvals-list" class="space-y-3"></div>
             </div>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -197,20 +182,7 @@
                   <th class="px-4 py-2 text-left">Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td class="px-4 py-2">Tech Innovators Ltd.</td>
-                  <td class="px-4 py-2"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Pending</span></td>
-                  <td class="px-4 py-2">A1, A2</td>
-                  <td class="px-4 py-2"><button class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Approve</button></td>
-                </tr>
-                <tr>
-                  <td class="px-4 py-2">AI Solutions Inc.</td>
-                  <td class="px-4 py-2"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Pending</span></td>
-                  <td class="px-4 py-2">B1</td>
-                  <td class="px-4 py-2"><button class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Approve</button></td>
-                </tr>
-              </tbody>
+              <tbody id="exhibitor-applications-list"></tbody>
             </table>
           </div>
         </div>
@@ -241,6 +213,25 @@
       </div>
     </div>
     <script src="../asset/js/adminDashboard.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+          btn.addEventListener('click', function() {
+            console.log('Tab clicked:', this.getAttribute('data-tab'));
+            // Check which tab is being shown
+            setTimeout(() => {
+              ['overview','fairs','exhibitors','halls','analytics'].forEach(tab => {
+                const el = document.getElementById('tab-' + tab);
+                if (el && !el.classList.contains('hidden')) {
+                  console.log('Tab visible:', tab);
+                }
+              });
+            }, 100);
+          });
+        });
+      });
+    </script>
   </main>
 </body>
 </html>

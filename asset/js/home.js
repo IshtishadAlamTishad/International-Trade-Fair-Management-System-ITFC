@@ -107,6 +107,17 @@ function renderAuthPage(container) {
   };
 }
 
+
+function ajaxRequest(url, method = 'POST', data = null) {
+  return fetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: data ? new URLSearchParams(data).toString() : undefined
+  }).then(res => res.json());
+}
+
 function renderLoginForm() {
   const form = document.getElementById('auth-form');
   form.innerHTML = `
@@ -122,12 +133,40 @@ function renderLoginForm() {
         <button class="w-full border border-blue-600 text-blue-600 bg-white rounded-lg px-4 py-2 font-medium mb-2 hover:bg-blue-50 transition" onclick="setDemoCredentials('exhibitor')">Exhibitor: exhibitor@company.com / expo123</button>
         <button class="w-full border border-blue-600 text-blue-600 bg-white rounded-lg px-4 py-2 font-medium hover:bg-blue-50 transition" onclick="setDemoCredentials('visitor')">Visitor: visitor@email.com / visit123</button>
       </div>
+      <div id="login-error" class="text-red-600 font-medium mt-2"></div>
     </div>
   `;
   document.getElementById('login-btn').onclick = function() {
-    alert('Login logic goes here.');
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value.trim();
+    if (!email || !password) {
+      document.getElementById('login-error').textContent = 'Please enter both email and password.';
+      return;
+    }
+  ajaxRequest('../controller/authentication/loginController.php', 'POST', {
+      action: 'login',
+      email,
+      password
+    }).then(res => {
+      if (res.success) {
+        if (res.role === 'admin') {
+          window.location.href = '../view/adminDashboard.html';
+        } else if (res.role === 'exhibitor') {
+          window.location.href = '../view/exhibitorDashboard.html';
+        } else if (res.role === 'visitor') {
+          window.location.href = '../view/visitorDashboard.html';
+        } else {
+          window.location.href = '../index.php';
+        }
+      } else {
+        document.getElementById('login-error').textContent = res.message || 'Invalid credentials.';
+      }
+    }).catch(() => {
+      document.getElementById('login-error').textContent = 'Login failed. Please try again.';
+    });
   };
 }
+
 
 function renderSignupForm() {
   const form = document.getElementById('auth-form');
@@ -157,18 +196,53 @@ function renderSignupForm() {
       <label class="block font-medium text-gray-700" for="signup-company">Company Name (Optional)</label>
       <input class="block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="signup-company" placeholder="Your company name">
       <button class="w-full bg-blue-600 text-white rounded-lg px-4 py-2 font-medium hover:bg-blue-700 transition" id="signup-btn">Create Account</button>
+      <div id="signup-error" class="text-red-600 font-medium mt-2"></div>
     </div>
   `;
   document.getElementById('signup-btn').onclick = function() {
-    alert('Signup logic goes here.');
+    const firstName = document.getElementById('signup-firstname').value.trim();
+    const lastName = document.getElementById('signup-lastname').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value.trim();
+    const role = document.getElementById('signup-role').value;
+    const company = document.getElementById('signup-company').value.trim();
+    if (!firstName || !lastName || !email || !password || !role) {
+      document.getElementById('signup-error').textContent = 'Please fill in all required fields.';
+      return;
+    }
+  ajaxRequest('../controller/authentication/loginController.php', 'POST', {
+      action: 'signup',
+      firstName,
+      lastName,
+      email,
+      password,
+      role,
+      company
+    }).then(res => {
+      if (res.success) {
+        if (role === 'admin') {
+          window.location.href = '../view/adminDashboard.php';
+        } else if (role === 'exhibitor') {
+          window.location.href = '../view/exhibitorDashboard.php';
+        } else if (role === 'visitor') {
+          window.location.href = '../view/visitorDashboard.php';
+        } else {
+          window.location.href = '../index.php';
+        }
+      } else {
+        document.getElementById('signup-error').textContent = res.message || 'Signup failed.';
+      }
+    }).catch(() => {
+      document.getElementById('signup-error').textContent = 'Signup failed. Please try again.';
+    });
   };
 }
 
 window.setDemoCredentials = function(role) {
   const creds = {
-    admin: { email: 'admin@itfc.com', password: 'admin123', redirect: '../view/adminDashboard.html' },
-    exhibitor: { email: 'exhibitor@company.com', password: 'expo123', redirect: '../view/exhibitorDashboard.html' },
-    visitor: { email: 'visitor@email.com', password: 'visit123', redirect: '../view/visitorDashboard.html' }
+    admin: { email: 'admin@itfc.com', password: 'admin123', redirect: '../view/adminDashboard.php' },
+    exhibitor: { email: 'exhibitor@company.com', password: 'expo123', redirect: '../view/exhibitorDashboard.php' },
+    visitor: { email: 'visitor@email.com', password: 'visit123', redirect: '../view/visitorDashboard.php' }
   };
   document.getElementById('login-email').value = creds[role].email;
   document.getElementById('login-password').value = creds[role].password;
